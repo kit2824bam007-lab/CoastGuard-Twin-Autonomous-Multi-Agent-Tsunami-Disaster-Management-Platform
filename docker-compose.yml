@@ -1,0 +1,65 @@
+version: "3.9"
+
+services:
+  postgres:
+    image: timescale/timescaledb:latest-pg16
+    container_name: coastguard-timescaledb
+    environment:
+      POSTGRES_USER: tsunami_user
+      POSTGRES_PASSWORD: tsunami_pass
+      POSTGRES_DB: tsunami_db
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U tsunami_user"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  redis:
+    image: redis:7-alpine
+    container_name: coastguard-redis
+    ports:
+      - "6379:6379"
+
+  mqtt-broker:
+    image: eclipse-mosquitto:2.0
+    container_name: coastguard-mqtt
+    ports:
+      - "1883:1883"
+      - "9001:9001"
+    volumes:
+      - ./mosquitto.conf:/mosquitto/config/mosquitto.conf
+
+  backend:
+    build: ./backend
+    container_name: coastguard-backend
+    ports:
+      - "8000:8000"
+    environment:
+      - DATABASE_URL=postgresql+asyncpg://tsunami_user:tsunami_pass@postgres:5432/tsunami_db
+      - REDIS_URL=redis://redis:6379
+      - MQTT_BROKER_HOST=mqtt-broker
+      - MQTT_BROKER_PORT=1883
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_started
+      mqtt-broker:
+        condition: service_started
+
+  frontend:
+    build: ./frontend
+    container_name: coastguard-frontend
+    ports:
+      - "5173:5173"
+    environment:
+      - VITE_API_BASE_URL=http://localhost:8000
+    depends_on:
+      - backend
+
+volumes:
+  pgdata:
