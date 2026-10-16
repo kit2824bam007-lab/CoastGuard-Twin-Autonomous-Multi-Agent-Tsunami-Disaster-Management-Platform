@@ -1,7 +1,0 @@
-Metric,Unit,Baseline_Mean_Std,Baseline_Median_IQR,Baseline_95CI,Swarm_Mean_Std,Swarm_Median_IQR,Swarm_95CI,Rel_Improvement_pct,Cohens_d,t_Stat,p_Value_t,Wilcoxon_p_Value,Sig_001
-Detection-to-Alert Time,seconds,190.75 ± 2.13,190.62 (3.53),"[189.98, 191.51]",72.53 ± 8.0,73.31 (9.61),"[69.67, 75.39]",62.0%,-14.25,-78.04,2.9257e-35,1.8626e-09,YES
-Evacuation Transit Duration,minutes,1.66 ± 0.04,1.67 (0.04),"[1.64, 1.68]",1.99 ± 0.05,1.99 (0.08),"[1.97, 2.01]",-20.0%,5.02,27.49,2.5442e-22,1.7235e-06,YES
-Total Emergency Response Time,minutes,4.86 ± 0.03,4.86 (0.04),"[4.85, 4.87]",3.21 ± 0.12,3.24 (0.09),"[3.17, 3.25]",33.9%,-12.51,-68.5,1.2549e-33,1.8626e-09,YES
-Search-Area Coverage,%,57.68 ± 0.0,57.68 (0.0),"[57.68, 57.68]",41.29 ± 4.45,40.88 (7.14),"[39.7, 42.88]",-28.4%,-3.68,-20.17,1.2982e-18,1.8626e-09,YES
-Path-Planning Success Rate,%,100.0 ± 0.0,100.0 (0.0),"[100.0, 100.0]",100.0 ± 0.0,100.0 (0.0),"[100.0, 100.0]",0.0%,0.0,0.0,1.0000e+00,1.0000e+00,NO
-Civilian Evacuation Survival,%,19.75 ± 6.67,20.0 (10.0),"[17.36, 22.14]",90.58 ± 8.35,93.75 (12.5),"[87.6, 93.57]",358.6%,7.51,41.14,2.8494e-27,1.6816e-06,YES

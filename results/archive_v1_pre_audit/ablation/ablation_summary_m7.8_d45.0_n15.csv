@@ -1,6 +1,0 @@
-Ablation_Variant,PSO_Enabled,AStar_Enabled,Mesh_Enabled,Is_Centralized,Detection_Time_s_Mean,Detection_Time_s_Std,Evacuation_Time_min_Mean,Evacuation_Time_min_Std,Search_Coverage_pct_Mean,Search_Coverage_pct_Std,Path_Planning_Success_pct_Mean,Path_Planning_Success_pct_Std,Evacuation_Success_pct_Mean,Evacuation_Success_pct_Std
-Full Proposed System (PSO + A* + Mesh),True,True,True,False,33.65,0.91,2.85,0.06,45.78,4.99,97.67,2.13,100.0,0.0
-Swarm w/o PSO (Fixed Patrol),False,True,True,False,34.48,1.28,2.85,0.05,39.14,2.84,97.67,2.13,100.0,0.0
-Swarm w/o A* (Direct Path),True,False,True,False,33.65,0.91,2.1,0.05,45.78,4.99,100.0,0.0,100.0,0.0
-Swarm w/o Mesh (Isolated Agents),True,True,False,False,33.91,1.12,2.83,0.05,66.57,1.94,97.67,2.13,100.0,0.0
-Centralized Baseline System,False,True,False,True,150.13,2.45,4.67,0.04,39.61,3.04,96.17,2.56,59.17,7.56

@@ -34,3 +34,8 @@ mosquitto_data/
 .idea/
 .DS_Store
 Thumbs.db
+
+# Research & Documentation (Local Only)
+paper/
+results/
+docs/

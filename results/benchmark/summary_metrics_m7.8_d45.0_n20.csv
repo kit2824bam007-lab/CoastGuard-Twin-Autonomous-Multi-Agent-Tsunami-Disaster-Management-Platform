@@ -1,6 +1,0 @@
-Metric,Unit,Baseline_Mean,Baseline_Std,Baseline_95CI_Low,Baseline_95CI_High,Proposed_Mean,Proposed_Std,Proposed_95CI_Low,Proposed_95CI_High,Improvement_Percentage,Preferred_Direction
-Detection-to-Alert Time,seconds,149.56,3.04,148.23,150.9,34.13,1.26,33.58,34.68,77.2,Lower is Better
-Average Evacuation Time,minutes,5.0,0.0,5.0,5.0,5.0,0.0,5.0,5.0,0.0,Lower is Better
-Search-Area Coverage,%,38.82,3.05,37.48,40.15,46.0,4.48,44.04,47.96,18.5,Higher is Better
-Path-Planning Success Rate,%,2.12,4.0,0.37,3.88,98.5,1.7,97.75,99.25,4535.3,Higher is Better
-Evacuation Success Rate,%,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,Higher is Better
