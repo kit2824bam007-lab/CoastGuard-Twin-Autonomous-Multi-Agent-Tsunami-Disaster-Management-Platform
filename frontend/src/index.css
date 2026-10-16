@@ -4,23 +4,25 @@
 
 @layer base {
   body {
-    @apply bg-slate-950 text-slate-100 font-sans antialiased overflow-x-hidden select-none;
+    @apply bg-slate-50 text-slate-800 font-sans antialiased overflow-x-hidden select-none;
   }
 }
 
-/* Glassmorphism panel styles */
+/* Glassmorphism panel styles - Modern Clean White/Light Theme */
 .glass-panel {
-  background: rgba(15, 23, 42, 0.75);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: rgba(255, 255, 255, 0.90);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  border: 1px solid rgba(226, 232, 240, 0.95);
+  box-shadow: 0 4px 14px -2px rgba(15, 23, 42, 0.05), 0 2px 4px -2px rgba(15, 23, 42, 0.03);
 }
 
 .glass-panel-glow {
-  background: rgba(15, 23, 42, 0.85);
+  background: rgba(255, 255, 255, 0.96);
   backdrop-filter: blur(16px);
-  border: 1px solid rgba(56, 189, 248, 0.25);
-  box-shadow: 0 0 20px rgba(14, 165, 233, 0.15);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(14, 165, 233, 0.4);
+  box-shadow: 0 10px 25px -5px rgba(14, 165, 233, 0.16), 0 4px 6px -2px rgba(14, 165, 233, 0.05);
 }
 
 /* Scrollbar customization */
@@ -30,14 +32,14 @@
 }
 
 ::-webkit-scrollbar-track {
-  background: rgba(15, 23, 42, 0.5);
+  background: rgba(241, 245, 249, 0.85);
 }
 
 ::-webkit-scrollbar-thumb {
-  background: rgba(51, 65, 85, 0.8);
+  background: rgba(203, 213, 225, 0.95);
   border-radius: 3px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: rgba(100, 116, 139, 1);
+  background: rgba(148, 163, 184, 1);
 }

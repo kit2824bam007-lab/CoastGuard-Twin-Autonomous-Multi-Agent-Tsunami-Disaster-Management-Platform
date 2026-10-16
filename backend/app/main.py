@@ -19,8 +19,10 @@ from app.services.digital_twin import digital_twin_service
 from app.services.swarm_engine import swarm_engine
 from app.services.ml_classifier import ml_classifier
 from app.services.benchmark_service import benchmark_service
+from app.services.mqtt_service import mqtt_service
+from app.database import init_db
 
-from app.routers import sensors, twin, swarm, alerts, metrics, live_data, authority, federated, replay
+from app.routers import sensors, twin, swarm, alerts, metrics, live_data, authority, federated, replay, data, predict, command
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger("coastguard_twin.main")
@@ -89,6 +91,7 @@ async def continuous_simulation_loop():
             }
 
             await ws_manager.broadcast(payload)
+            mqtt_service.publish_telemetry(payload)
             await asyncio.sleep(1.0)
         except asyncio.CancelledError:
             logger.info("Simulation loop cancelled.")
@@ -101,11 +104,24 @@ async def continuous_simulation_loop():
 async def lifespan(app: FastAPI):
     global sim_task
     logger.info("Initializing CoastGuard Twin Backend Platform...")
+    
+    # 1. Initialize Database Schema (if DB container/service is accessible)
+    try:
+        await init_db()
+        logger.info("Database schema initialized successfully.")
+    except Exception as db_err:
+        logger.warning(f"Database schema initialization deferred/skipped: {db_err}")
+
+    # 2. Start MQTT Client Integration
+    mqtt_service.start()
+
+    # 3. Start 1 Hz simulation background loop
     sim_task = asyncio.create_task(continuous_simulation_loop())
     yield
-    logger.info("Shutting down simulation background task...")
+    logger.info("Shutting down CoastGuard Twin Backend services...")
     if sim_task:
         sim_task.cancel()
+    mqtt_service.stop()
 
 app = FastAPI(
     title="CoastGuard Twin — Autonomous Disaster Management Platform",
@@ -124,6 +140,7 @@ app.add_middleware(
 
 # Include Router Layers
 app.include_router(sensors.router)
+app.include_router(sensors.legacy_sensors_router)
 app.include_router(twin.router)
 app.include_router(swarm.router)
 app.include_router(alerts.router)
@@ -132,6 +149,9 @@ app.include_router(live_data.router)
 app.include_router(authority.router)
 app.include_router(federated.router)
 app.include_router(replay.router)
+app.include_router(data.router)
+app.include_router(predict.router)
+app.include_router(command.router)
 
 @app.get("/health")
 async def health_check():
@@ -139,7 +159,8 @@ async def health_check():
         "status": "healthy",
         "service": "CoastGuard Twin Platform Engine",
         "tick_count": sim_engine.tick_count,
-        "active_ws_clients": len(ws_manager.active_connections)
+        "active_ws_clients": len(ws_manager.active_connections),
+        "mqtt_connected": mqtt_service.is_connected
     }
 
 @app.websocket("/ws/telemetry")

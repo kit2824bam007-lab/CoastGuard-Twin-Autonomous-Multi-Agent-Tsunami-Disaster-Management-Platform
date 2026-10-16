@@ -1,0 +1,246 @@
+{
+  "source_file": "raw_trials_m7.8_d45.0_n30.csv",
+  "num_paired_trials": 30,
+  "metrics": [
+    {
+      "metric_key": "Detection_To_Alert_Time_s",
+      "title": "Detection-to-Alert Time",
+      "unit": "seconds",
+      "lower_is_better": true,
+      "sample_size_n": 30,
+      "baseline": {
+        "mean": 190.75,
+        "std": 2.13,
+        "median": 190.62,
+        "iqr": 3.53,
+        "ci95": [
+          189.98,
+          191.51
+        ]
+      },
+      "proposed_swarm": {
+        "mean": 72.53,
+        "std": 8.0,
+        "median": 73.31,
+        "iqr": 9.61,
+        "ci95": [
+          69.67,
+          75.39
+        ]
+      },
+      "paired_difference": {
+        "mean_diff": -118.22,
+        "std_diff": 8.3,
+        "relative_improvement_pct": 62.0,
+        "cohens_d": -14.25
+      },
+      "hypothesis_tests": {
+        "t_statistic": -78.04,
+        "t_p_value": 2.925670852880562e-35,
+        "wilcoxon_statistic": 0.0,
+        "wilcoxon_p_value": 1.862645149230957e-09,
+        "statistically_significant_001": true
+      }
+    },
+    {
+      "metric_key": "Evacuation_Duration_min",
+      "title": "Evacuation Transit Duration",
+      "unit": "minutes",
+      "lower_is_better": true,
+      "sample_size_n": 30,
+      "baseline": {
+        "mean": 1.66,
+        "std": 0.04,
+        "median": 1.67,
+        "iqr": 0.04,
+        "ci95": [
+          1.64,
+          1.68
+        ]
+      },
+      "proposed_swarm": {
+        "mean": 1.99,
+        "std": 0.05,
+        "median": 1.99,
+        "iqr": 0.08,
+        "ci95": [
+          1.97,
+          2.01
+        ]
+      },
+      "paired_difference": {
+        "mean_diff": 0.33,
+        "std_diff": 0.07,
+        "relative_improvement_pct": -20.0,
+        "cohens_d": 5.02
+      },
+      "hypothesis_tests": {
+        "t_statistic": 27.49,
+        "t_p_value": 2.5442065213526716e-22,
+        "wilcoxon_statistic": 0.0,
+        "wilcoxon_p_value": 1.7235135468062213e-06,
+        "statistically_significant_001": true
+      }
+    },
+    {
+      "metric_key": "Total_Response_Time_min",
+      "title": "Total Emergency Response Time",
+      "unit": "minutes",
+      "lower_is_better": true,
+      "sample_size_n": 30,
+      "baseline": {
+        "mean": 4.86,
+        "std": 0.03,
+        "median": 4.86,
+        "iqr": 0.04,
+        "ci95": [
+          4.85,
+          4.87
+        ]
+      },
+      "proposed_swarm": {
+        "mean": 3.21,
+        "std": 0.12,
+        "median": 3.24,
+        "iqr": 0.09,
+        "ci95": [
+          3.17,
+          3.25
+        ]
+      },
+      "paired_difference": {
+        "mean_diff": -1.65,
+        "std_diff": 0.13,
+        "relative_improvement_pct": 33.9,
+        "cohens_d": -12.51
+      },
+      "hypothesis_tests": {
+        "t_statistic": -68.5,
+        "t_p_value": 1.254903934858934e-33,
+        "wilcoxon_statistic": 0.0,
+        "wilcoxon_p_value": 1.862645149230957e-09,
+        "statistically_significant_001": true
+      }
+    },
+    {
+      "metric_key": "Search_Coverage_pct",
+      "title": "Search-Area Coverage",
+      "unit": "%",
+      "lower_is_better": false,
+      "sample_size_n": 30,
+      "baseline": {
+        "mean": 57.68,
+        "std": 0.0,
+        "median": 57.68,
+        "iqr": 0.0,
+        "ci95": [
+          57.68,
+          57.68
+        ]
+      },
+      "proposed_swarm": {
+        "mean": 41.29,
+        "std": 4.45,
+        "median": 40.88,
+        "iqr": 7.14,
+        "ci95": [
+          39.7,
+          42.88
+        ]
+      },
+      "paired_difference": {
+        "mean_diff": -16.39,
+        "std_diff": 4.45,
+        "relative_improvement_pct": -28.4,
+        "cohens_d": -3.68
+      },
+      "hypothesis_tests": {
+        "t_statistic": -20.17,
+        "t_p_value": 1.2982205840863457e-18,
+        "wilcoxon_statistic": 0.0,
+        "wilcoxon_p_value": 1.862645149230957e-09,
+        "statistically_significant_001": true
+      }
+    },
+    {
+      "metric_key": "Path_Planning_Success_pct",
+      "title": "Path-Planning Success Rate",
+      "unit": "%",
+      "lower_is_better": false,
+      "sample_size_n": 30,
+      "baseline": {
+        "mean": 100.0,
+        "std": 0.0,
+        "median": 100.0,
+        "iqr": 0.0,
+        "ci95": [
+          100.0,
+          100.0
+        ]
+      },
+      "proposed_swarm": {
+        "mean": 100.0,
+        "std": 0.0,
+        "median": 100.0,
+        "iqr": 0.0,
+        "ci95": [
+          100.0,
+          100.0
+        ]
+      },
+      "paired_difference": {
+        "mean_diff": 0.0,
+        "std_diff": 0.0,
+        "relative_improvement_pct": 0.0,
+        "cohens_d": 0.0
+      },
+      "hypothesis_tests": {
+        "t_statistic": 0.0,
+        "t_p_value": 1.0,
+        "wilcoxon_statistic": 0.0,
+        "wilcoxon_p_value": 1.0,
+        "statistically_significant_001": false
+      }
+    },
+    {
+      "metric_key": "Evacuation_Completion_pct",
+      "title": "Civilian Evacuation Survival",
+      "unit": "%",
+      "lower_is_better": false,
+      "sample_size_n": 30,
+      "baseline": {
+        "mean": 19.75,
+        "std": 6.67,
+        "median": 20.0,
+        "iqr": 10.0,
+        "ci95": [
+          17.36,
+          22.14
+        ]
+      },
+      "proposed_swarm": {
+        "mean": 90.58,
+        "std": 8.35,
+        "median": 93.75,
+        "iqr": 12.5,
+        "ci95": [
+          87.6,
+          93.57
+        ]
+      },
+      "paired_difference": {
+        "mean_diff": 70.83,
+        "std_diff": 9.43,
+        "relative_improvement_pct": 358.6,
+        "cohens_d": 7.51
+      },
+      "hypothesis_tests": {
+        "t_statistic": 41.14,
+        "t_p_value": 2.8494337860731192e-27,
+        "wilcoxon_statistic": 0.0,
+        "wilcoxon_p_value": 1.6816090007658744e-06,
+        "statistically_significant_001": true
+      }
+    }
+  ]
+}

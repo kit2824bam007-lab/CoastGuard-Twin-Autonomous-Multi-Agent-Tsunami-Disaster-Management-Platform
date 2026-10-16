@@ -51,13 +51,15 @@ async def fetch_usgs_feed() -> list[dict]:
         if coords[0] is None:
             continue
 
-        lon, lat, depth = coords[0], coords[1], coords[2] or 0.0
+        lon, lat = coords[0], coords[1]
+        depth = float(coords[2]) if coords[2] is not None else 0.0
+        mag = float(props.get("mag")) if props.get("mag") is not None else 0.0
         events.append({
             "id": feature.get("id"),
-            "magnitude": props.get("mag"),
+            "magnitude": mag,
             "depth_km": depth,
-            "latitude": lat,
-            "longitude": lon,
+            "latitude": float(lat),
+            "longitude": float(lon),
             "place": props.get("place", "Unknown"),
             "source": "USGS",
             "event_time": datetime.fromtimestamp(props.get("time", 0) / 1000, tz=timezone.utc),

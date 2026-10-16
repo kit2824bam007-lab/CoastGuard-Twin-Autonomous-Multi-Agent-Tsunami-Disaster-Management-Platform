@@ -27,7 +27,7 @@ class ConnectionManager:
         self.redis_task = None
         redis_host = getattr(settings, "redis_host", "localhost")
         redis_port = getattr(settings, "redis_port", 6379)
-        self.redis_url = f"redis://{redis_host}:{redis_port}/0"
+        self.redis_url = getattr(settings, "redis_url", None) or f"redis://{redis_host}:{redis_port}/0"
 
     async def connect(self, websocket: WebSocket):
         await websocket.accept()

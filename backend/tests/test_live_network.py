@@ -38,6 +38,8 @@ async def test_noaa_bulletins_graceful_fallback():
     bulletins = await fetch_active_noaa_bulletins()
     assert isinstance(bulletins, list)
     
-    # Active NOAA bulletins should show up as strings or empty list
+    # Active NOAA bulletins should show up as dicts with title or empty list
     for b in bulletins:
-        assert isinstance(b, str)
+        assert isinstance(b, dict)
+        assert "title" in b
+        assert "summary" in b

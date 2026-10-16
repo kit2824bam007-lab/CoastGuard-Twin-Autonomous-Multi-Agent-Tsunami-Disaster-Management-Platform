@@ -1,19 +1,36 @@
+# Environment & Secrets
+.env
+.env.*
+!.env.example
+*.env
+backend/.env
+frontend/.env
+
 # Python
 .venv/
 backend/.venv/
 __pycache__/
 *.pyc
+*.pyo
+*.pyd
+.pytest_cache/
+.coverage
+htmlcov/
 
 # Node
 node_modules/
 frontend/node_modules/
+frontend/dist/
+.npm/
 
-# Environment
-.env
-backend/.env
-
-# Database
+# Database & Broker Data
 *.db
+*.sqlite3
+postgres_data/
+mosquitto_data/
 
-# VS Code
+# IDE & OS
 .vscode/
+.idea/
+.DS_Store
+Thumbs.db

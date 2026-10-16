@@ -29,10 +29,20 @@ class Settings(BaseSettings):
     firebase_credentials_json: str = "./firebase-service-account.json"
     firebase_topic: str = "tsunami-alerts"
 
+    redis_url: str = "redis://localhost:6379/0"
+    redis_host: str = "localhost"
+    redis_port: int = 6379
+
+    mqtt_broker_host: str = "localhost"
+    mqtt_broker_port: int = 1883
+
     api_key: str = "change_me"
     cors_origins: str = "http://localhost:5173"
 
-    model_config = SettingsConfigDict(env_file=BACKEND_ENV_FILE, extra="ignore")
+    model_config = SettingsConfigDict(
+        env_file=[BACKEND_ENV_FILE, Path(__file__).resolve().parent.parent.parent / ".env"],
+        extra="ignore"
+    )
 
     @property
     def alert_phone_number_list(self) -> list[str]:

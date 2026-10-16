@@ -2,7 +2,7 @@
 Layer 3 — Swarm Intelligence Coordination Engine
 Simulates heterogeneous multi-agent swarm (UAVs, USVs, Ground Robots)
 with decentralized PSO task allocation, proximity mesh topology,
-A* path planning, and dynamic fault resilience.
+A* path planning, deterministic sector assignment, and hazard-safe waypoint tracking.
 """
 import math
 import random
@@ -10,29 +10,31 @@ import time
 from typing import Dict, List, Any, Optional
 from app.services.data_sim_engine import GRID_SIZE
 
-COMM_RANGE = 12.0 # Maximum mesh communication range in grid units
+COMM_RANGE = 12.0  # Maximum mesh communication range in grid units
 
 class SwarmAgent:
     def __init__(self, agent_id: str, agent_type: str, start_x: float, start_y: float):
         self.id = agent_id
-        self.type = agent_type # UAV, USV, GROUND
+        self.type = agent_type  # UAV, USV, GROUND
         self.x = start_x
         self.y = start_y
         self.vx = 0.0
         self.vy = 0.0
-        self.status = "ACTIVE" # ACTIVE, RETURNING, LOST
-        self.battery = random.uniform(85.0, 100.0)
-        self.confidence_report = round(random.uniform(0.85, 0.98), 2)
+        self.status = "ACTIVE"  # ACTIVE, RETURNING, LOST
+        self.battery = 95.0
+        self.confidence_report = 0.92
         
-        # Target assignment
+        # Target assignment and path
         self.target_x = start_x
         self.target_y = start_y
         self.pbest_x = start_x
         self.pbest_y = start_y
         self.pbest_val = 0.0
+        self.current_path: List[List[int]] = []
 
-        # Assigned search sector
-        self.assigned_sector = f"Sector-{(hash(agent_id) % 4) + 1}"
+        # Deterministic sector assignment (avoids process-randomized hash())
+        sector_idx = (sum(ord(c) for c in agent_id) % 4) + 1
+        self.assigned_sector = f"Sector-{sector_idx}"
         self.connected_neighbors: List[str] = []
 
     def update_battery(self):
@@ -54,7 +56,8 @@ class SwarmAgent:
             "battery": round(self.battery, 1),
             "confidence_report": self.confidence_report,
             "assigned_sector": self.assigned_sector,
-            "connected_neighbors": list(self.connected_neighbors)
+            "connected_neighbors": list(self.connected_neighbors),
+            "current_path": self.current_path
         }
 
 class SwarmEngine:
@@ -144,12 +147,13 @@ class SwarmEngine:
     def tick_pso_and_pathfinding(self, risk_grid: Optional[List[List[Dict[str, Any]]]] = None):
         """
         Executes decentralized PSO movement + mesh coverage redistribution.
-        Each agent updates velocity based on personal best + neighborhood best.
+        Ensures agent movement respects A* obstacle boundaries and never steps into lethal hazards.
         """
-        # First update mesh connections
-        topology = self.update_mesh_topology()
+        from app.services.path_planner import astar_planner
+        from app.services.data_sim_engine import sim_engine
 
-        # Identify lost agents and redistribute their sectors
+        # Update mesh connections
+        topology = self.update_mesh_topology()
         lost_agent_ids = [a.id for a in self.agents.values() if a.status == "LOST"]
 
         for agent in self.agents.values():
@@ -157,33 +161,48 @@ class SwarmEngine:
                 agent.update_battery()
                 continue
 
+            max_speed = 1.8 if agent.type == "UAV" else (1.0 if agent.type == "USV" else 0.7)
+
             # PSO parameters
-            w = 0.5  # Inertia
-            c1 = 1.2 # Personal cognitive factor
-            c2 = 1.5 # Social neighborhood factor
+            w = 0.5   # Inertia
+            c1 = 1.2  # Cognitive factor
+            c2 = 1.5  # Social neighborhood factor
 
             # Neighborhood best target among connected active neighbors
             gbest_x, gbest_y = agent.target_x, agent.target_y
             if agent.connected_neighbors:
-                neighbor_agents = [self.agents[nid] for nid in agent.connected_neighbors if nid in self.agents and self.agents[nid].status == "ACTIVE"]
+                neighbor_agents = [
+                    self.agents[nid] for nid in agent.connected_neighbors
+                    if nid in self.agents and self.agents[nid].status == "ACTIVE"
+                ]
                 if neighbor_agents:
-                    # Pick neighbor closest to highest risk zone if grid available, else random explore
                     target_neighbor = max(neighbor_agents, key=lambda n: n.battery)
                     gbest_x, gbest_y = target_neighbor.target_x, target_neighbor.target_y
 
-            # If an active neighbor lost battery/connection, expand exploration to cover
-            if lost_agent_ids and random.random() < 0.3:
-                # Seek un-surveyed high coordinate
-                gbest_x = max(0, min(GRID_SIZE - 1, gbest_x + random.uniform(-5.0, 5.0)))
-                gbest_y = max(0, min(GRID_SIZE - 1, gbest_y + random.uniform(-5.0, 5.0)))
+            # Replan A* path if needed
+            bathymetry_matrix = sim_engine.bathymetry_grid.tolist()
+            if risk_grid is not None and (not agent.current_path or len(agent.current_path) < 2):
+                plan = astar_planner.find_path(
+                    (agent.x, agent.y),
+                    (agent.target_x, agent.target_y),
+                    agent_type=agent.type,
+                    bathymetry_grid=bathymetry_matrix,
+                    inundation_grid=risk_grid
+                )
+                if plan["success"] and len(plan["path"]) > 1:
+                    agent.current_path = [[int(p[0]), int(p[1])] for p in plan["path"][:8]]
+
+            # Steer along A* path waypoint if available, else toward target
+            steer_target_x, steer_target_y = agent.target_x, agent.target_y
+            if agent.current_path and len(agent.current_path) > 1:
+                next_wp = agent.current_path[1]
+                steer_target_x, steer_target_y = float(next_wp[0]), float(next_wp[1])
+                if math.sqrt((agent.x - steer_target_x)**2 + (agent.y - steer_target_y)**2) < 1.2:
+                    agent.current_path.pop(0)
 
             r1, r2 = random.random(), random.random()
-            
-            # Speed cap based on type
-            max_speed = 1.8 if agent.type == "UAV" else (1.0 if agent.type == "USV" else 0.6)
-
-            agent.vx = w * agent.vx + c1 * r1 * (agent.target_x - agent.x) + c2 * r2 * (gbest_x - agent.x)
-            agent.vy = w * agent.vy + c1 * r1 * (agent.target_y - agent.y) + c2 * r2 * (gbest_y - agent.y)
+            agent.vx = w * agent.vx + c1 * r1 * (steer_target_x - agent.x) + c2 * r2 * (gbest_x - agent.x)
+            agent.vy = w * agent.vy + c1 * r1 * (steer_target_y - agent.y) + c2 * r2 * (gbest_y - agent.y)
 
             # Clamp velocity
             speed = math.sqrt(agent.vx**2 + agent.vy**2)
@@ -191,14 +210,38 @@ class SwarmEngine:
                 agent.vx = (agent.vx / speed) * max_speed
                 agent.vy = (agent.vy / speed) * max_speed
 
-            # Movement update
-            agent.x = max(0.0, min(float(GRID_SIZE - 1), agent.x + agent.vx))
-            agent.y = max(0.0, min(float(GRID_SIZE - 1), agent.y + agent.vy))
+            # Validate candidate destination cell before moving (hazard barrier enforcement)
+            cand_x = max(0.0, min(float(GRID_SIZE - 1), agent.x + agent.vx))
+            cand_y = max(0.0, min(float(GRID_SIZE - 1), agent.y + agent.vy))
 
-            # Boundary target reset when close
+            cand_cost = astar_planner.get_cell_cost(
+                int(round(cand_x)), int(round(cand_y)), agent.type,
+                bathymetry_matrix, risk_grid
+            )
+
+            if not math.isinf(cand_cost):
+                agent.x = cand_x
+                agent.y = cand_y
+            else:
+                # If PSO forces pull into an obstacle/water barrier, follow valid A* waypoint directly
+                if agent.current_path and len(agent.current_path) > 1:
+                    wp = agent.current_path[1]
+                    dx = wp[0] - agent.x
+                    dy = wp[1] - agent.y
+                    d = math.sqrt(dx**2 + dy**2)
+                    if d > 0.01:
+                        step_len = min(max_speed, d)
+                        agent.x += (dx / d) * step_len
+                        agent.y += (dy / d) * step_len
+                else:
+                    agent.vx = 0.0
+                    agent.vy = 0.0
+
+            # Target reached: pick new random exploration waypoint
             if math.sqrt((agent.x - agent.target_x)**2 + (agent.y - agent.target_y)**2) < 2.0:
                 agent.target_x = random.uniform(5.0, GRID_SIZE - 5.0)
                 agent.target_y = random.uniform(5.0, GRID_SIZE - 5.0)
+                agent.current_path.clear()
 
             agent.update_battery()
 

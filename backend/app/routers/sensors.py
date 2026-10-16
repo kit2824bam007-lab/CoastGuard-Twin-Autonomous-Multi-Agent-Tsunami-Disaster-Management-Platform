@@ -39,3 +39,23 @@ async def reset_simulation():
         "status": "RESET",
         "message": "Simulation returned to nominal baseline state."
     }
+
+# Dedicated compatibility router for frontend /sensors endpoints
+legacy_sensors_router = APIRouter(prefix="/sensors", tags=["Sensors Database"])
+
+@legacy_sensors_router.get("/", summary="List active sensor stations")
+async def list_sensor_stations():
+    from app.services.sensor_service import DEFAULT_STATIONS
+    return DEFAULT_STATIONS
+
+@legacy_sensors_router.get("/readings/{station_id}", summary="Get recent readings for a sensor station")
+async def get_station_readings(station_id: str, limit: int = 50):
+    snapshot = sim_engine.get_latest_snapshot()
+    return [
+        {
+            "station_id": station_id,
+            "reading_time": snapshot["timestamp"],
+            "water_level_m": snapshot["sensors"]["dart_buoy"]["sea_level_anomaly_m"],
+            "anomaly_detected": snapshot["is_event_active"]
+        }
+    ]

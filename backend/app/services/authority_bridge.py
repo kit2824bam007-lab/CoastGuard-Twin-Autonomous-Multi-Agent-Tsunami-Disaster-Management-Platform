@@ -18,7 +18,7 @@ class AuthorityBridgeService:
         """Immutably appends event record to audit ledger."""
         record = {
             "id": str(uuid.uuid4()),
-            "timestamp": datetime.datetime.utcnow().isoformat() + "Z",
+            "timestamp": datetime.datetime.now(datetime.timezone.utc).isoformat(),
             "epoch": round(time.time(), 3),
             "event_type": event_type,
             "details": details,
@@ -36,7 +36,7 @@ class AuthorityBridgeService:
         for official handoff to INCOIS (India) or NOAA/PTWC (Global).
         """
         identifier = f"CAP-CGTWIN-{int(time.time())}"
-        sent_time = datetime.datetime.utcnow().isoformat() + "Z"
+        sent_time = datetime.datetime.now(datetime.timezone.utc).isoformat()
         severity = hazard_classification.get("predicted_class", "NO_THREAT")
 
         # Map to CAP urgency, severity, certainty

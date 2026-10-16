@@ -113,6 +113,61 @@ Or manually click **"Trigger Scenario"** (Magnitude 7.8, Epicenter 45 km) in the
 
 ---
 
+## 🔬 Research Reproducibility & Benchmark Suite (IEEE Verification)
+
+CoastGuard Twin includes an automated, empirically reproducible experiment suite to verify research claims, train ML models, run multi-trial Monte Carlo simulations, and export machine-readable CSV/JSON outputs.
+
+### 1. Reproduce Historical Paper Figures
+Re-runs the exact historical ML classifier and benchmark calculations to verify original paper metrics:
+```bash
+python backend/app/experiments/reproduce_paper.py
+```
+*Outputs: `results/reproduction/reproduction_summary.json`*
+
+### 2. Machine Learning Training & Noise Stress Testing
+Train and evaluate the Random Forest Hazard Classifier with full metadata logging:
+```bash
+# Train on historical 2,400 synthetic samples or calibrated physics mode:
+python backend/app/experiments/train_ml.py --mode historical --samples 2400 --seed 42
+python backend/app/experiments/train_ml.py --mode calibrated --samples 2400 --seed 42
+
+# Evaluate test set with noise perturbation stress tests:
+python backend/app/experiments/evaluate_ml.py --mode historical
+python backend/app/experiments/evaluate_ml.py --mode calibrated
+```
+*Outputs: `results/classifier/` (model `.joblib`, evaluation summary `.json`, per-class `.csv`)*
+
+### 3. Multi-Trial Simulation Benchmark (Centralized vs. Swarm)
+Executes $N=30$ independently seeded discrete-event simulation trials with dynamic civilian evacuation over the 50x50 coastal grid:
+```bash
+python backend/app/experiments/run_benchmark.py --trials 30 --magnitude 7.8 --distance_km 45.0 --seed 100
+```
+*Outputs: `results/benchmark/` (`raw_trials_*.csv`, `summary_metrics_*.csv`, `benchmark_full_report_*.json` with Mean, Std, and 95% Confidence Intervals)*
+
+### 4. Component Ablation Studies
+Evaluates the individual contributions of PSO task allocation, A* path planning, Proximity Mesh communication, and Centralized dispatch across 5 variants:
+```bash
+python backend/app/experiments/run_ablation.py --trials 15 --magnitude 7.8 --distance_km 45.0 --seed 200
+```
+*Outputs: `results/ablation/` (`ablation_summary_*.csv`, `ablation_report_*.json`)*
+
+### 5. Automated Research Test Suite
+Execute the test suite validating A* obstacle avoidance, simulation mechanics, and metric calculations:
+```bash
+# Windows PowerShell:
+$env:PYTHONPATH="backend"; python -m pytest backend/tests
+
+# Linux/macOS:
+PYTHONPATH=backend pytest backend/tests
+```
+
+### 📚 Research Documentation & Audit Reports
+- [docs/RESEARCH_AUDIT.md](docs/RESEARCH_AUDIT.md) — Comprehensive architecture and methodology audit.
+- [docs/RESULTS_REPRODUCTION.md](docs/RESULTS_REPRODUCTION.md) — Forensic reproduction of all historical figures.
+- [docs/IEEE_PAPER_REVISION_GUIDE.md](docs/IEEE_PAPER_REVISION_GUIDE.md) — Claim-to-evidence matrix, mathematical notation, and IEEE reviewer alignment.
+- [docs/backtest_report.md](docs/backtest_report.md) — Historical model validation across 40 landmark earthquakes.
+- [docs/literature-review-and-comparison.md](docs/literature-review-and-comparison.md) — Comparative literature review against 7 IEEE papers.
+
 ## 📡 API Reference
 
 - `GET /health` — Liveness & status probe

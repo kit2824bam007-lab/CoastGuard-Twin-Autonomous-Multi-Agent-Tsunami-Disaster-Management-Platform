@@ -1,6 +1,11 @@
 // Central API client — set VITE_API_BASE_URL in .env for deployment
-const API_BASE = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8000'
-const WS_BASE = API_BASE.replace(/^http/, 'ws')
+export const API_BASE = (import.meta.env.VITE_API_BASE_URL || 'http://localhost:8000').replace(/\/+$/, '')
+export const WS_BASE = API_BASE.replace(/^http/, 'ws')
+
+export function apiUrl(endpoint) {
+  const clean = endpoint.startsWith('/') ? endpoint : `/${endpoint}`
+  return `${API_BASE}${clean}`
+}
 
 export async function fetchEarthquakes(limit = 50) {
   const res = await fetch(`${API_BASE}/fetch-data/earthquakes?limit=${limit}`)

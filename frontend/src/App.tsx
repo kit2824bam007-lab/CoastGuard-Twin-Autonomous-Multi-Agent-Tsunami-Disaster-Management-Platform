@@ -10,6 +10,7 @@ import { ARWayfindingView } from './components/ARWayfindingView';
 import { ReplayControlPanel } from './components/ReplayControlPanel';
 import { ViewMode, UserRole, DataMode, TelemetryPayload } from './types';
 import { Language } from './i18n';
+import { apiUrl, WS_BASE } from './api/client';
 
 export const App: React.FC = () => {
   const [activeView, setActiveView] = useState<ViewMode>('COMMAND_CENTER');
@@ -28,7 +29,7 @@ export const App: React.FC = () => {
 
   // Fetch static bathymetry grid once on mount
   useEffect(() => {
-    fetch('/api/sensors/bathymetry')
+    fetch(apiUrl('/api/sensors/bathymetry'))
       .then(res => res.json())
       .then(data => {
         if (data.grid) setBathymetryGrid(data.grid);
@@ -42,8 +43,7 @@ export const App: React.FC = () => {
     let pollInterval: any = null;
 
     const connectWebSocket = () => {
-      const protocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
-      const wsUrl = `${protocol}//${window.location.host}/ws/telemetry`;
+      const wsUrl = `${WS_BASE}/ws/telemetry`;
 
       ws = new WebSocket(wsUrl);
       wsRef.current = ws;
@@ -81,10 +81,10 @@ export const App: React.FC = () => {
       pollInterval = setInterval(async () => {
         try {
           const [resSensors, resTwin, resSwarm, resAlerts] = await Promise.all([
-            fetch('/api/sensors/snapshot'),
-            fetch('/api/twin/state'),
-            fetch('/api/swarm/topology'),
-            fetch('/api/alerts/severity')
+            fetch(apiUrl('/api/sensors/snapshot')),
+            fetch(apiUrl('/api/twin/state')),
+            fetch(apiUrl('/api/swarm/topology')),
+            fetch(apiUrl('/api/alerts/severity'))
           ]);
 
           const sData = await resSensors.json();
@@ -127,7 +127,7 @@ export const App: React.FC = () => {
       if (wsRef.current && wsRef.current.readyState === WebSocket.OPEN) {
         wsRef.current.send(JSON.stringify({ action: 'TRIGGER_EVENT', magnitude, distance_km: distanceKm }));
       } else {
-        await fetch('/api/sensors/trigger-event', {
+        await fetch(apiUrl('/api/sensors/trigger-event'), {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ magnitude, distance_km: distanceKm })
@@ -143,7 +143,7 @@ export const App: React.FC = () => {
       if (wsRef.current && wsRef.current.readyState === WebSocket.OPEN) {
         wsRef.current.send(JSON.stringify({ action: 'RESET' }));
       } else {
-        await fetch('/api/sensors/reset', { method: 'POST' });
+        await fetch(apiUrl('/api/sensors/reset'), { method: 'POST' });
       }
     } catch (e) {
       console.error("Error resetting simulation:", e);
@@ -153,7 +153,7 @@ export const App: React.FC = () => {
   const handleToggleDataMode = async () => {
     const nextMode = dataMode === 'SIMULATED' ? 'LIVE_PUBLIC_FEEDS' : 'SIMULATED';
     try {
-      await fetch('/api/live-data/toggle', {
+      await fetch(apiUrl('/api/live-data/toggle'), {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ mode: nextMode })
@@ -166,7 +166,7 @@ export const App: React.FC = () => {
 
   const handleToggleSatellite = async () => {
     try {
-      const res = await fetch('/api/swarm/toggle-satellite', { method: 'POST' });
+      const res = await fetch(apiUrl('/api/swarm/toggle-satellite'), { method: 'POST' });
       const data = await res.json();
       setIsSatelliteActive(data.is_satellite_failover_active);
     } catch (e) {
@@ -176,7 +176,7 @@ export const App: React.FC = () => {
 
   const handleDeployAgent = async (type: 'UAV' | 'USV' | 'GROUND', x: number, y: number) => {
     try {
-      await fetch('/api/swarm/deploy', {
+      await fetch(apiUrl('/api/swarm/deploy'), {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ agent_type: type, x, y })
@@ -188,7 +188,7 @@ export const App: React.FC = () => {
 
   const handleSimulateLoss = async (agentId: string) => {
     try {
-      await fetch('/api/swarm/simulate-loss', {
+      await fetch(apiUrl('/api/swarm/simulate-loss'), {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ agent_id: agentId })
@@ -202,7 +202,7 @@ export const App: React.FC = () => {
 
   return (
     <div className={`min-h-screen flex flex-col font-sans transition-colors ${
-      highContrast ? 'bg-black text-yellow-300' : 'bg-slate-950 text-slate-100'
+      highContrast ? 'bg-black text-yellow-300' : 'bg-slate-50 text-slate-900'
     }`}>
       <Navbar
         activeView={activeView}
@@ -235,7 +235,7 @@ export const App: React.FC = () => {
               onReset={handleResetSimulation}
             />
             {/* Historical Replay Scrubbing Controller Panel */}
-            <div className="p-4 bg-slate-950 border-t border-slate-800">
+            <div className="p-4 bg-white/95 border-t border-slate-200">
               <ReplayControlPanel />
             </div>
           </div>

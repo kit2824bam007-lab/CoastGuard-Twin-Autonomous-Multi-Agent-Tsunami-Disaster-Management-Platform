@@ -1,0 +1,210 @@
+{
+  "source_file": "raw_trials_m7.8_d45.0_n30.csv",
+  "metrics": [
+    {
+      "metric_key": "Detection_To_Alert_Time_s",
+      "title": "Detection-to-Alert Time",
+      "unit": "seconds",
+      "lower_is_better": true,
+      "n_trials": 30,
+      "baseline": {
+        "mean": 149.0633,
+        "std": 2.8098,
+        "median": 148.5,
+        "iqr": 4.025,
+        "ci95_low": 148.0579,
+        "ci95_high": 150.0688
+      },
+      "proposed": {
+        "mean": 34.22,
+        "std": 1.2928,
+        "median": 34.65,
+        "iqr": 2.375,
+        "ci95_low": 33.7574,
+        "ci95_high": 34.6826
+      },
+      "paired_difference": {
+        "mean": -114.8433,
+        "std": 2.9409,
+        "relative_improvement_pct": 77.04,
+        "cohens_d": -39.0507
+      },
+      "hypothesis_tests": {
+        "paired_t_test": {
+          "statistic": -213.8897,
+          "p_value": 6.2002e-48,
+          "significant_alpha_005": true
+        },
+        "wilcoxon_test": {
+          "statistic": 0.0,
+          "p_value": 1.8626e-09,
+          "significant_alpha_005": true
+        }
+      }
+    },
+    {
+      "metric_key": "Evacuation_Time_min",
+      "title": "Average Evacuation Time",
+      "unit": "minutes",
+      "lower_is_better": true,
+      "n_trials": 30,
+      "baseline": {
+        "mean": 4.6383,
+        "std": 0.05,
+        "median": 4.65,
+        "iqr": 0.0575,
+        "ci95_low": 4.6204,
+        "ci95_high": 4.6562
+      },
+      "proposed": {
+        "mean": 2.8137,
+        "std": 0.052,
+        "median": 2.81,
+        "iqr": 0.075,
+        "ci95_low": 2.795,
+        "ci95_high": 2.8323
+      },
+      "paired_difference": {
+        "mean": -1.8247,
+        "std": 0.0662,
+        "relative_improvement_pct": 39.34,
+        "cohens_d": -27.5786
+      },
+      "hypothesis_tests": {
+        "paired_t_test": {
+          "statistic": -151.0541,
+          "p_value": 1.4763e-43,
+          "significant_alpha_005": true
+        },
+        "wilcoxon_test": {
+          "statistic": 0.0,
+          "p_value": 1.7203e-06,
+          "significant_alpha_005": true
+        }
+      }
+    },
+    {
+      "metric_key": "Search_Coverage_pct",
+      "title": "Search-Area Coverage",
+      "unit": "%",
+      "lower_is_better": false,
+      "n_trials": 30,
+      "baseline": {
+        "mean": 39.3227,
+        "std": 2.677,
+        "median": 39.76,
+        "iqr": 3.16,
+        "ci95_low": 38.3647,
+        "ci95_high": 40.2806
+      },
+      "proposed": {
+        "mean": 45.9693,
+        "std": 4.9251,
+        "median": 47.22,
+        "iqr": 7.13,
+        "ci95_low": 44.2069,
+        "ci95_high": 47.7318
+      },
+      "paired_difference": {
+        "mean": 6.6467,
+        "std": 5.4543,
+        "relative_improvement_pct": 16.9,
+        "cohens_d": 1.2186
+      },
+      "hypothesis_tests": {
+        "paired_t_test": {
+          "statistic": 6.6747,
+          "p_value": 2.5491e-07,
+          "significant_alpha_005": true
+        },
+        "wilcoxon_test": {
+          "statistic": 21.5,
+          "p_value": 1.4239e-05,
+          "significant_alpha_005": true
+        }
+      }
+    },
+    {
+      "metric_key": "Path_Planning_Success_pct",
+      "title": "Path-Planning Success Rate",
+      "unit": "%",
+      "lower_is_better": false,
+      "n_trials": 30,
+      "baseline": {
+        "mean": 97.1667,
+        "std": 2.9165,
+        "median": 97.5,
+        "iqr": 5.0,
+        "ci95_low": 96.123,
+        "ci95_high": 98.2103
+      },
+      "proposed": {
+        "mean": 98.3333,
+        "std": 1.8952,
+        "median": 98.75,
+        "iqr": 2.5,
+        "ci95_low": 97.6551,
+        "ci95_high": 99.0115
+      },
+      "paired_difference": {
+        "mean": 1.1667,
+        "std": 2.0483,
+        "relative_improvement_pct": 1.2,
+        "cohens_d": 0.5696
+      },
+      "hypothesis_tests": {
+        "paired_t_test": {
+          "statistic": 3.1198,
+          "p_value": 0.0040697,
+          "significant_alpha_005": true
+        },
+        "wilcoxon_test": {
+          "statistic": 0.0,
+          "p_value": 0.006459,
+          "significant_alpha_005": true
+        }
+      }
+    },
+    {
+      "metric_key": "Evacuation_Success_pct",
+      "title": "Civilian Evacuation Survival",
+      "unit": "%",
+      "lower_is_better": false,
+      "n_trials": 30,
+      "baseline": {
+        "mean": 64.6667,
+        "std": 7.1237,
+        "median": 63.75,
+        "iqr": 9.375,
+        "ci95_low": 62.1175,
+        "ci95_high": 67.2159
+      },
+      "proposed": {
+        "mean": 100.0,
+        "std": 0.0,
+        "median": 100.0,
+        "iqr": 0.0,
+        "ci95_low": 100.0,
+        "ci95_high": 100.0
+      },
+      "paired_difference": {
+        "mean": 35.3333,
+        "std": 7.1237,
+        "relative_improvement_pct": 54.64,
+        "cohens_d": 4.96
+      },
+      "hypothesis_tests": {
+        "paired_t_test": {
+          "statistic": 27.1669,
+          "p_value": 3.546e-22,
+          "significant_alpha_005": true
+        },
+        "wilcoxon_test": {
+          "statistic": 0.0,
+          "p_value": 1.6426e-06,
+          "significant_alpha_005": true
+        }
+      }
+    }
+  ]
+}

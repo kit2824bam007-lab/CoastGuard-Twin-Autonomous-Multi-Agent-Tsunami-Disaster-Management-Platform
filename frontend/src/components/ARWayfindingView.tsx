@@ -64,13 +64,13 @@ export const ARWayfindingView: React.FC<ARWayfindingViewProps> = ({ onClose }) =
 
       {/* Top Header Bar */}
       <div className="absolute top-4 left-4 right-4 z-20 flex items-center justify-between">
-        <div className="glass-panel px-3 py-1.5 rounded-xl border border-slate-700 flex items-center gap-2 text-xs font-bold text-cyan-300">
-          <Navigation className="w-4 h-4 text-cyan-400 animate-spin" /> WebXR AR Wayfinding Active
+        <div className="glass-panel px-3 py-1.5 rounded-xl border border-slate-200 flex items-center gap-2 text-xs font-bold text-cyan-700 shadow-md">
+          <Navigation className="w-4 h-4 text-cyan-600 animate-spin" /> WebXR AR Wayfinding Active
         </div>
 
         <button
           onClick={onClose}
-          className="w-10 h-10 rounded-full bg-slate-900/90 text-white flex items-center justify-center border border-slate-700 shadow-lg"
+          className="w-10 h-10 rounded-full bg-white/95 text-slate-800 flex items-center justify-center border border-slate-200 shadow-lg hover:bg-white transition"
         >
           <X className="w-5 h-5" />
         </button>
@@ -79,24 +79,24 @@ export const ARWayfindingView: React.FC<ARWayfindingViewProps> = ({ onClose }) =
       {/* AR HUD Overlay: 3D Directional Compass Arrow & Target Distance */}
       <div className="absolute inset-0 z-10 pointer-events-none flex flex-col items-center justify-center">
         {/* Animated AR Directional Target Ring */}
-        <div className="relative w-64 h-64 border-2 border-cyan-400/40 rounded-full flex items-center justify-center animate-ping-slow">
+        <div className="relative w-64 h-64 border-2 border-cyan-400/50 rounded-full flex items-center justify-center animate-ping-slow">
           
           {/* Arrow pointing toward shelter heading */}
           <div
             className="w-24 h-24 flex items-center justify-center transition-transform duration-300"
             style={{ transform: `rotate(${heading}deg)` }}
           >
-            <div className="w-0 h-0 border-l-[18px] border-l-transparent border-r-[18px] border-r-transparent border-b-[40px] border-b-cyan-400 drop-shadow-[0_0_15px_rgba(56,189,248,0.8)]" />
+            <div className="w-0 h-0 border-l-[18px] border-l-transparent border-r-[18px] border-r-transparent border-b-[40px] border-b-cyan-500 drop-shadow-[0_0_15px_rgba(56,189,248,0.8)]" />
           </div>
         </div>
 
         {/* Floating AR Wayfinding Card */}
-        <div className="mt-8 glass-panel-glow px-6 py-4 rounded-3xl border border-cyan-400/50 text-center space-y-1 shadow-2xl pointer-events-auto">
-          <div className="text-[11px] font-bold text-cyan-400 uppercase tracking-widest flex items-center justify-center gap-1.5">
-            <ShieldCheck className="w-4 h-4 text-emerald-400" /> Highland Sanctuary Shelter
+        <div className="mt-8 glass-panel-glow px-6 py-4 rounded-3xl border border-cyan-500/40 text-center space-y-1 shadow-2xl pointer-events-auto">
+          <div className="text-[11px] font-bold text-cyan-700 uppercase tracking-widest flex items-center justify-center gap-1.5">
+            <ShieldCheck className="w-4 h-4 text-emerald-600" /> Highland Sanctuary Shelter
           </div>
-          <div className="text-2xl font-black text-white">2.4 km <span className="text-sm font-semibold text-cyan-300">NE (45°)</span></div>
-          <div className="text-xs font-mono text-emerald-400">+85m Elevation Inland</div>
+          <div className="text-2xl font-black text-slate-900">2.4 km <span className="text-sm font-semibold text-cyan-700">NE (45°)</span></div>
+          <div className="text-xs font-mono text-emerald-700 font-semibold">+85m Elevation Inland</div>
         </div>
       </div>
     </div>

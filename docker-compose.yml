@@ -1,65 +1,95 @@
-version: "3.9"
-
 services:
   postgres:
     image: timescale/timescaledb:latest-pg16
     container_name: coastguard-timescaledb
+    restart: unless-stopped
     environment:
-      POSTGRES_USER: tsunami_user
-      POSTGRES_PASSWORD: tsunami_pass
-      POSTGRES_DB: tsunami_db
+      POSTGRES_USER: ${POSTGRES_USER:-tsunami_user}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-tsunami_secure_dev_password}
+      POSTGRES_DB: ${POSTGRES_DB:-tsunami_db}
     ports:
-      - "5432:5432"
+      - "${POSTGRES_PORT:-5433}:5432"
     volumes:
       - pgdata:/var/lib/postgresql/data
+      - ./database/schema.sql:/docker-entrypoint-initdb.d/init.sql:ro
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U tsunami_user"]
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-tsunami_user} -d ${POSTGRES_DB:-tsunami_db}"]
       interval: 5s
       timeout: 5s
       retries: 5
+      start_period: 10s
 
   redis:
     image: redis:7-alpine
     container_name: coastguard-redis
+    restart: unless-stopped
     ports:
-      - "6379:6379"
+      - "6380:6379"
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 5
+      start_period: 5s
 
   mqtt-broker:
     image: eclipse-mosquitto:2.0
     container_name: coastguard-mqtt
+    restart: unless-stopped
     ports:
-      - "1883:1883"
-      - "9001:9001"
+      - "${MQTT_BROKER_PORT:-1884}:1883"
+      - "${MQTT_WS_PORT:-9002}:9001"
     volumes:
       - ./mosquitto.conf:/mosquitto/config/mosquitto.conf
+      - mqttdata:/mosquitto/data
 
   backend:
-    build: ./backend
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
     container_name: coastguard-backend
+    restart: unless-stopped
     ports:
-      - "8000:8000"
+      - "${BACKEND_PORT:-8001}:8000"
     environment:
-      - DATABASE_URL=postgresql+asyncpg://tsunami_user:tsunami_pass@postgres:5432/tsunami_db
-      - REDIS_URL=redis://redis:6379
+      - DATABASE_URL=${DATABASE_URL:-postgresql+asyncpg://tsunami_user:tsunami_secure_dev_password@postgres:5432/tsunami_db}
+      - REDIS_URL=redis://redis:6379/0
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
       - MQTT_BROKER_HOST=mqtt-broker
       - MQTT_BROKER_PORT=1883
+      - CORS_ORIGINS=${CORS_ORIGINS:-http://localhost:5173,http://localhost:3000}
+      - API_KEY=${API_KEY:-change_me_to_a_long_random_dev_string}
     depends_on:
       postgres:
         condition: service_healthy
       redis:
-        condition: service_started
+        condition: service_healthy
       mqtt-broker:
         condition: service_started
+    healthcheck:
+      test: ["CMD-SHELL", "python -c 'import urllib.request; urllib.request.urlopen(\"http://localhost:8000/health\")'"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
 
   frontend:
-    build: ./frontend
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+      args:
+        VITE_API_BASE_URL: ${VITE_API_BASE_URL:-http://localhost:8001}
     container_name: coastguard-frontend
+    restart: unless-stopped
     ports:
-      - "5173:5173"
+      - "${FRONTEND_PORT:-5173}:5173"
     environment:
-      - VITE_API_BASE_URL=http://localhost:8000
+      - VITE_API_BASE_URL=${VITE_API_BASE_URL:-http://localhost:8001}
     depends_on:
-      - backend
+      backend:
+        condition: service_started
 
 volumes:
   pgdata:
+  mqttdata:

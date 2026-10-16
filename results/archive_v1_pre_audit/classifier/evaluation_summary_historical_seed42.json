@@ -1,0 +1,95 @@
+{
+  "model_file": "rf_classifier_historical_seed42.joblib",
+  "dataset_mode": "historical",
+  "seed": 42,
+  "test_sample_count": 360,
+  "overall_accuracy": 0.9944,
+  "balanced_accuracy": 0.8736,
+  "macro_precision": 0.9935,
+  "macro_recall": 0.8736,
+  "macro_f1": 0.9127,
+  "per_class": {
+    "NO_THREAT": {
+      "support": 129,
+      "precision": 0.9923,
+      "recall": 1.0,
+      "f1_score": 0.9961
+    },
+    "WATCH": {
+      "support": 175,
+      "precision": 1.0,
+      "recall": 0.9943,
+      "f1_score": 0.9971
+    },
+    "WARNING": {
+      "support": 54,
+      "precision": 0.9818,
+      "recall": 1.0,
+      "f1_score": 0.9908
+    },
+    "SEVERE": {
+      "support": 2,
+      "precision": 1.0,
+      "recall": 0.5,
+      "f1_score": 0.6667
+    }
+  },
+  "confusion_matrix_raw": [
+    [
+      129,
+      0,
+      0,
+      0
+    ],
+    [
+      1,
+      174,
+      0,
+      0
+    ],
+    [
+      0,
+      0,
+      54,
+      0
+    ],
+    [
+      0,
+      0,
+      1,
+      1
+    ]
+  ],
+  "noise_stress_testing": [
+    {
+      "noise_level_sigma": 0.0,
+      "accuracy": 0.9944,
+      "balanced_accuracy": 0.8736,
+      "macro_f1": 0.9127
+    },
+    {
+      "noise_level_sigma": 0.05,
+      "accuracy": 0.9583,
+      "balanced_accuracy": 0.8487,
+      "macro_f1": 0.8895
+    },
+    {
+      "noise_level_sigma": 0.1,
+      "accuracy": 0.8861,
+      "balanced_accuracy": 0.7942,
+      "macro_f1": 0.7928
+    },
+    {
+      "noise_level_sigma": 0.2,
+      "accuracy": 0.7528,
+      "balanced_accuracy": 0.7066,
+      "macro_f1": 0.701
+    },
+    {
+      "noise_level_sigma": 0.3,
+      "accuracy": 0.6528,
+      "balanced_accuracy": 0.6402,
+      "macro_f1": 0.6182
+    }
+  ]
+}

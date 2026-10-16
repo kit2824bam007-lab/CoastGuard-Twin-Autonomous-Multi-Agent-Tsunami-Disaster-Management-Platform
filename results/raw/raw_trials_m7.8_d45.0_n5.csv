@@ -1,0 +1,11 @@
+Trial_ID,Seed,Architecture,Detection_To_Alert_Time_s,Evacuation_Time_min,Search_Coverage_pct,Path_Planning_Success_pct,Evacuation_Success_pct,Civilians_Evacuated,Civilians_Trapped,Total_Civilians,Communication_Messages,Execution_Duration_ms
+1,100,Centralized Baseline,155.7,4.69,42.64,97.5,60.0,24,0,40,1240,726.8
+2,101,Centralized Baseline,149.6,4.72,39.44,92.5,67.5,27,5,40,1240,879.22
+3,102,Centralized Baseline,151.3,4.61,39.92,100.0,80.0,32,1,40,1240,765.88
+4,103,Centralized Baseline,147.4,4.62,37.36,100.0,55.0,22,2,40,1240,656.2
+5,104,Centralized Baseline,154.9,4.78,39.84,100.0,57.5,23,0,40,1240,662.14
+1,100,Proposed Multi-Agent Swarm,35.2,2.83,40.2,97.5,100.0,40,0,40,4458,952.36
+2,101,Proposed Multi-Agent Swarm,35.8,2.88,46.76,97.5,100.0,40,0,40,4354,760.53
+3,102,Proposed Multi-Agent Swarm,34.8,2.73,39.96,100.0,100.0,40,0,40,5092,652.46
+4,103,Proposed Multi-Agent Swarm,33.4,2.81,48.52,100.0,100.0,40,0,40,4356,706.31
+5,104,Proposed Multi-Agent Swarm,34.4,2.73,38.76,100.0,100.0,40,0,40,5472,719.55
